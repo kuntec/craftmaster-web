@@ -16,6 +16,12 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState('')
 
+
+  const fillDemo = () => {
+    setEmail('demo@craftmaster.ai')
+    setPassword('demo123456')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -78,6 +84,8 @@ export default function LoginPage() {
                 : <Eye    className="w-4 h-4" />
               }
             </button>
+
+
           </div>
         </div>
 
@@ -88,6 +96,15 @@ export default function LoginPage() {
             {error}
           </div>
         )}
+
+                    {/* Demo login */}
+<button
+  type="button"
+  onClick={fillDemo}
+  className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-500 text-sm font-medium hover:bg-indigo-50 hover:border-indigo-400 transition-all"
+>
+  🧪 Fill demo credentials
+</button>
 
         {/* Submit */}
         <button
