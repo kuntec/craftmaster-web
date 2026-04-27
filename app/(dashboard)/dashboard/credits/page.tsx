@@ -408,12 +408,33 @@ function CreditsContent() {
   })
 
   // Sync credits balance after successful payment
+  // useEffect(() => {
+  //   if (success) {
+  //     refetch()
+  //     creditsApi.balance().then((res) => {
+  //       updateUser({ creditsBalance: res.data.balance })
+  //     })
+  //   }
+  // }, [success])
+
   useEffect(() => {
     if (success) {
-      refetch()
-      creditsApi.balance().then((res) => {
-        updateUser({ creditsBalance: res.data.balance })
-      })
+      // Poll balance every 2 seconds for 10 seconds
+      // to catch webhook delay
+      let attempts = 0
+      const interval = setInterval(async () => {
+        attempts++
+        try {
+          const res = await creditsApi.balance()
+          updateUser({ creditsBalance: res.data.balance })
+          refetch()
+        } catch {
+          // silent
+        }
+        if (attempts >= 5) clearInterval(interval)
+      }, 2000)
+  
+      return () => clearInterval(interval)
     }
   }, [success])
 
