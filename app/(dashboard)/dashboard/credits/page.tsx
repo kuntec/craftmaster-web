@@ -95,7 +95,7 @@ export default function CreditsPage() {
   const handleDevAdd = async () => {
     setDevLoading(true)
     try {
-      const res = await creditsApi.add(100)
+      const res = await creditsApi.add(selected.credits)
       updateUser({ creditsBalance: res.data.balance })
       refetch()
     } catch (err: any) {
@@ -318,8 +318,7 @@ export default function CreditsPage() {
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page === historyData.pagination.pages}
-                className="btn-secondary text-xs py-1.5 px-3"
-              >
+                className="btn-secondary text-xs py-1.5 px-3">
                 Next
               </button>
             </div>
