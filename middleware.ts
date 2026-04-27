@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/login', '/register']
-
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   const token = req.cookies.get('cm_token')?.value
@@ -20,6 +18,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
+  // Let / serve the landing page
   return NextResponse.next()
 }
 
