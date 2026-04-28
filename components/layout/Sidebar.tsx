@@ -9,6 +9,9 @@ import {
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 import Logo from '@/components/ui/Logo'
+import { useEffect } from 'react'
+import { creditsApi } from '@/lib/api'
+const { user, logout, updateUser } = useAuthStore()
 
 const NAV_ITEMS = [
   { label: 'Dashboard', href: '/dashboard',         icon: LayoutDashboard, exact: true },
@@ -31,6 +34,19 @@ export default function Sidebar() {
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href)
+
+  // Inside the Sidebar component add:
+useEffect(() => {
+  const refresh = async () => {
+    try {
+      const res = await creditsApi.balance()
+      updateUser({ creditsBalance: res.data.balance })
+    } catch {
+      // silent
+    }
+  }
+  refresh()
+}, [])
 
   return (
     <aside

@@ -61,6 +61,7 @@ export default function Logo({
         <span className="font-black text-white text-xl tracking-tight">
           Studio42
         </span>
+        
         <span
           className="text-base font-bold"
         //   style={{ color: '#00C2FF' }}
