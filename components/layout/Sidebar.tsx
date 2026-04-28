@@ -1,74 +1,28 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Code2 } from 'lucide-react'
-import { FolderOpen } from 'lucide-react'
-
 import {
-  ImageIcon,
-  Video,
-  Globe,
-  LayoutDashboard,
-  CreditCard,
-  History,
-  Settings,
-  LogOut,
-  Zap,
+  ImageIcon, Video, Globe, LayoutDashboard,
+  CreditCard, History, Settings, LogOut,
+  Zap, Code2, FolderOpen,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
+import Logo from '@/components/ui/Logo'
 
 const NAV_ITEMS = [
-  {
-    label: 'Dashboard',
-    href:  '/dashboard',
-    icon:  LayoutDashboard,
-    exact: true,
-  },
-  {
-    label: 'Image',
-    href:  '/dashboard/image',
-    icon:  ImageIcon,
-  },
-  {
-    label: 'Video',
-    href:  '/dashboard/video',
-    icon:  Video,
-  },
-  {
-    label: 'Website',
-    href:  '/dashboard/website',
-    icon:  Globe,
-  },
-  // Add to NAV_ITEMS array
-{
-  label: 'AI Builder',
-  href:  '/dashboard/builder',
-  icon:  Code2,
-},
+  { label: 'Dashboard', href: '/dashboard',         icon: LayoutDashboard, exact: true },
+  { label: 'Image',     href: '/dashboard/image',   icon: ImageIcon                    },
+  { label: 'Video',     href: '/dashboard/video',   icon: Video                        },
+  { label: 'Website',   href: '/dashboard/website', icon: Globe                        },
+  { label: 'AI Builder',href: '/dashboard/builder', icon: Code2                        },
 ]
 
 const BOTTOM_ITEMS = [
-  {
-    label: 'Credits',
-    href:  '/dashboard/credits',
-    icon:  CreditCard,
-  },
-  {
-    label: 'History',
-    href:  '/dashboard/history',
-    icon:  History,
-  },
-  {
-    label: 'Settings',
-    href:  '/dashboard/settings',
-    icon:  Settings,
-  },
-  {
-    label: 'Projects',
-    href:  '/dashboard/projects',
-    icon:  FolderOpen,
-  },
+  { label: 'Credits',  href: '/dashboard/credits',  icon: CreditCard },
+  { label: 'History',  href: '/dashboard/history',  icon: History    },
+  { label: 'Projects', href: '/dashboard/projects', icon: FolderOpen },
+  { label: 'Settings', href: '/dashboard/settings', icon: Settings   },
 ]
 
 export default function Sidebar() {
@@ -79,36 +33,54 @@ export default function Sidebar() {
     exact ? pathname === href : pathname.startsWith(href)
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-56 bg-[#0f0f0f] flex flex-col z-50">
+    <aside
+      className="fixed left-0 top-0 h-screen w-56 flex flex-col z-50"
+      style={{ background: '#0D0F1A', borderRight: '1px solid rgba(255,255,255,0.06)' }}
+    >
 
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 py-5 border-b border-[#2a2a2a]">
-        <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center shrink-0">
-          <span className="text-white font-bold text-sm">CM</span>
-        </div>
-        <span className="text-white font-semibold text-sm">
-          CraftMaster
-        </span>
+      <div
+        className="px-4 py-4"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        <Logo size={32} />
       </div>
 
       {/* Credits badge */}
-      <div className="px-3 py-3 border-b border-[#2a2a2a]">
+      <div
+        className="px-3 py-3"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+      >
         <Link
           href="/dashboard/credits"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all"
+          style={{
+            background: 'rgba(123,47,190,0.12)',
+            border:     '1px solid rgba(123,47,190,0.25)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(123,47,190,0.2)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(123,47,190,0.12)'
+          }}
         >
-          <Zap className="w-3.5 h-3.5 text-indigo-400" fill="currentColor" />
-          <span className="text-indigo-300 text-xs font-medium">
+          <Zap className="w-3.5 h-3.5" fill="currentColor" style={{ color: '#C4A8FF' }} />
+          <span className="text-xs font-semibold" style={{ color: '#C4A8FF' }}>
             {user?.creditsBalance ?? 0} credits
           </span>
         </Link>
       </div>
 
       {/* Main nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <p className="text-[#3a3a3a] text-[10px] font-semibold uppercase tracking-wider px-3 mb-2">
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <p
+          className="text-[10px] font-bold uppercase tracking-wider px-3 mb-2"
+          style={{ color: 'rgba(255,255,255,0.2)' }}
+        >
           Tools
         </p>
+
         {NAV_ITEMS.map((item) => {
           const Icon   = item.icon
           const active = isActive(item.href, item.exact)
@@ -116,24 +88,44 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
-                active
-                  ? 'bg-[#1f1f1f] text-white border-l-2 border-indigo-500'
-                  : 'text-[#a1a1aa] hover:bg-[#1a1a1a] hover:text-white'
-              )}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all"
+              style={active ? {
+                background:  'rgba(123,47,190,0.15)',
+                color:       'white',
+                borderLeft:  '2px solid #7B2FBE',
+              } : {
+                color: 'rgba(255,255,255,0.45)',
+              }}
+              onMouseEnter={(e) => {
+                if (!active) {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                  e.currentTarget.style.color = 'white'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!active) {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.45)'
+                }
+              }}
             >
-              <Icon className={cn(
-                'w-4 h-4 shrink-0',
-                active ? 'text-indigo-400' : ''
-              )} />
+              <Icon
+                className="w-4 h-4 shrink-0"
+                style={active ? {
+                  color: '#C4A8FF',
+                } : {}}
+              />
               {item.label}
             </Link>
           )
         })}
 
-        <div className="pt-4">
-          <p className="text-[#3a3a3a] text-[10px] font-semibold uppercase tracking-wider px-3 mb-2">
+        {/* Account section */}
+        <div className="pt-5">
+          <p
+            className="text-[10px] font-bold uppercase tracking-wider px-3 mb-2"
+            style={{ color: 'rgba(255,255,255,0.2)' }}
+          >
             Account
           </p>
           {BOTTOM_ITEMS.map((item) => {
@@ -143,17 +135,31 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
-                  active
-                    ? 'bg-[#1f1f1f] text-white border-l-2 border-indigo-500'
-                    : 'text-[#a1a1aa] hover:bg-[#1a1a1a] hover:text-white'
-                )}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all"
+                style={active ? {
+                  background: 'rgba(123,47,190,0.15)',
+                  color:      'white',
+                  borderLeft: '2px solid #7B2FBE',
+                } : {
+                  color: 'rgba(255,255,255,0.45)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.color = 'white'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.color = 'rgba(255,255,255,0.45)'
+                  }
+                }}
               >
-                <Icon className={cn(
-                  'w-4 h-4 shrink-0',
-                  active ? 'text-indigo-400' : ''
-                )} />
+                <Icon
+                  className="w-4 h-4 shrink-0"
+                  style={active ? { color: '#C4A8FF' } : {}}
+                />
                 {item.label}
               </Link>
             )
@@ -162,26 +168,41 @@ export default function Sidebar() {
       </nav>
 
       {/* User + logout */}
-      <div className="px-3 py-4 border-t border-[#2a2a2a]">
-        <div className="flex items-center gap-2 px-3 py-2 mb-1">
-          <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center shrink-0">
-            <span className="text-white text-xs font-semibold">
-              {user?.name?.charAt(0).toUpperCase() ?? 'U'}
-            </span>
+      <div
+        className="px-3 py-4"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        {/* User info */}
+        <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-white text-xs font-bold"
+            style={{ background: 'linear-gradient(135deg, #7B2FBE, #4F8EF7)' }}
+          >
+            {user?.name?.charAt(0).toUpperCase() ?? 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-medium truncate">
+            <p className="text-white text-xs font-semibold truncate">
               {user?.name}
             </p>
-            <p className="text-[#a1a1aa] text-[10px] truncate">
+            <p className="text-[10px] truncate" style={{ color: 'rgba(255,255,255,0.35)' }}>
               {user?.email}
             </p>
           </div>
         </div>
 
+        {/* Logout */}
         <button
           onClick={logout}
-          className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-[#a1a1aa] hover:bg-[#1a1a1a] hover:text-red-400 transition-all"
+          className="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm transition-all"
+          style={{ color: 'rgba(255,255,255,0.4)' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(239,68,68,0.08)'
+            e.currentTarget.style.color = '#FCA5A5'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.color = 'rgba(255,255,255,0.4)'
+          }}
         >
           <LogOut className="w-4 h-4 shrink-0" />
           Sign out
