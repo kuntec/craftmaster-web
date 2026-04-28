@@ -801,7 +801,10 @@ export default function LandingPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[100px]" style={{ background: 'rgba(123,47,190,0.1)' }} />
         </div>
         <div className="relative max-w-2xl mx-auto">
+          <div className='flex justify-center'>
           <Logo size={80} />
+          </div>
+
           <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '1.5rem 0 1rem', color: 'white', lineHeight: 1.05 }}>
             Everything you imagine.
             <br />
