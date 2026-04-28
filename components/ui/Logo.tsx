@@ -2,16 +2,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Logo({
-  size = 36,
-  showText = false,
+  size = 40,
   href = '/',
 }: {
-  size?:     number
-  showText?: boolean
-  href?:     string
+  size?: number
+  href?: string
 }) {
   return (
-    <Link href={href} className="flex items-center gap-2.5">
+    <Link href={href} className="flex items-center gap-3">
+      {/* Logo image */}
       <Image
         src="/logo.png"
         alt="Studio42"
@@ -20,12 +19,19 @@ export default function Logo({
         className="object-contain"
         priority
       />
-      {showText && (
-        <span className="font-black text-white text-lg tracking-tight">
+
+      {/* Brand name */}
+      <div className="flex items-baseline gap-0.5 leading-none">
+        <span className="font-black text-white text-xl tracking-tight">
           Studio42
-          <span style={{ color: '#00C2FF' }}>.ai</span>
         </span>
-      )}
+        <span
+          className="text-base font-bold"
+          style={{ color: '#00C2FF' }}
+        >
+          .ai
+        </span>
+      </div>
     </Link>
   )
 }
