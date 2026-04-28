@@ -1835,7 +1835,7 @@ export default function LandingPage() {
         style={{ background: 'rgba(13,15,26,0.9)', borderColor: 'rgba(255,255,255,0.06)' }}
       >
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Logo size={44} />
+          <Logo size={60} showText={true} />
 
           <div className="hidden md:flex items-center gap-6">
             <a href="#compare" className="text-sm text-white/50 hover:text-white transition-colors">Pricing</a>
@@ -2526,7 +2526,10 @@ export default function LandingPage() {
           />
         </div>
         <div className="relative max-w-2xl mx-auto">
-          <Logo size={80} />
+          <div className='flex justify-center'>
+          <Logo size={100} showText={false}  />
+          </div>
+
           <div className="mt-4 mb-2 text-6xl font-black text-white">Studio42</div>
           <p
             className="text-lg mb-4 font-medium"
@@ -2551,7 +2554,7 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="px-4 py-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Logo size={36} />
+          <Logo size={40} showText={true}/>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.2)' }}>
             © {new Date().getFullYear()} Studio42.ai · Everything you imagine. Built by AI.
           </p>

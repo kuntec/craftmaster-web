@@ -6,12 +6,9 @@ export const metadata: Metadata = {
   title:       'Studio42 — Everything you imagine. Built by AI.',
   description: 'Generate images, videos, websites and complete codebases with AI. Pay as you go. Credits never expire.',
   icons: {
-    icon: [
-      { url: '/logo.png',       type: 'image/png' },
-      { url: '/favicon.ico',    type: 'image/x-icon' },
-    ],
-    apple:   '/apple-icon.png',
-    shortcut: '/logo.png',
+    icon:    '/logo.png',
+    apple:   '/logo.png',
+    shortcut:'/logo.png',
   },
 }
 
@@ -22,13 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-       <head>
-        <link rel="icon"       href="/logo.png" type="image/png" />
-        <link rel="icon"       href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-icon.png" />
+    <html lang="en" suppressHydrationWarning>
+
+<head>
+        <link rel="icon" href="/logo.png" type="image/png" sizes="any" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
-      <body>
+       
+      <body suppressHydrationWarning>
         <QueryProvider>
           {children}
         </QueryProvider>
