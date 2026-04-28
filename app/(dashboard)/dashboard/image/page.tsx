@@ -265,16 +265,7 @@ export default function ImagePage() {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all" />
                 <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                   
-                   <a href={job.outputUrl}
-                    download
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-secondary text-xs py-1.5 px-3 shadow-lg"
->
-                    <Download className="w-3.5 h-3.5" />
-                    Download
-                  </a>
-
+                  
                   <button
                     onClick={() => handleDownload(job.outputUrl!, job.type)}
                     className="btn-secondary text-xs py-1.5 px-3 shadow-lg"
