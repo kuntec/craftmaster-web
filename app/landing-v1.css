@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+.landing-font {
+  font-family: 'Inter', sans-serif;
+}
+
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%       { transform: translateY(-12px) rotate(-6deg); }
+}
+@keyframes float-2 {
+  0%, 100% { transform: translateY(0) rotate(4deg); }
+  50%       { transform: translateY(-8px) rotate(4deg); }
+}
+@keyframes float-3 {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%       { transform: translateY(-15px) rotate(-3deg); }
+}
+@keyframes float-4 {
+  0%, 100% { transform: translateY(0) rotate(7deg); }
+  50%       { transform: translateY(-10px) rotate(7deg); }
+}
+@keyframes pulse-bg {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 0.8; }
+}
+@keyframes marquee-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.float-1 { animation: float-1 6s ease-in-out infinite; }
+.float-2 { animation: float-2 7s ease-in-out infinite 0.5s; }
+.float-3 { animation: float-3 8s ease-in-out infinite 1s; }
+.float-4 { animation: float-4 5s ease-in-out infinite 1.5s; }
+
+.marquee-left  { animation: marquee-left  50s linear infinite; }
+.marquee-right { animation: marquee-right 40s linear infinite; }
+
+.gradient-text {
+  background: linear-gradient(135deg, #7B2FBE 0%, #4F8EF7 50%, #00C2FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(123,47,190,0.4) !important;
+}
+
+textarea::placeholder {
+  color: rgba(255,255,255,0.2);
+}
