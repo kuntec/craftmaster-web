@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Loader2, AlertCircle, Check } from 'lucide-react'
 import { authApi } from '@/lib/api'
 import { useAuthStore } from '@/store/auth'
+import GoogleButton from '@/components/auth/GoogleButton'
 
 const PERKS = [
   '30 free credits on signup',
@@ -72,6 +73,18 @@ function RegisterForm() {
         <p className="text-gray-500 text-sm mb-6">
           Start with 30 free credits — no card needed
         </p>
+
+        {/* Google Sign Up */}
+<GoogleButton referralCode={referralCode} />
+
+{/* Divider */}
+<div className="flex items-center gap-3 my-5">
+  <div className="flex-1 h-px bg-gray-200" />
+  <span className="text-xs text-gray-400 font-medium">
+    or sign up with email
+  </span>
+  <div className="flex-1 h-px bg-gray-200" />
+</div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
