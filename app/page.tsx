@@ -268,7 +268,7 @@ export default function LandingPage() {
       {/* ── Navbar ── */}
       <nav className="sticky top-0 z-50 backdrop-blur-xl border-b" style={{ background: 'rgba(13,15,26,0.9)', borderColor: 'rgba(255,255,255,0.06)' }}>
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Logo />
+          <Logo size={60} showText = {true} />
           <div className="hidden md:flex items-center gap-6">
             {[['#try-free', 'Try free'], ['#samples', 'Examples'], ['#models', 'AI Models'], ['#compare', 'Pricing']].map(([href, label]) => (
               <a key={href} href={href} className="text-sm transition-colors" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}
@@ -801,7 +801,7 @@ export default function LandingPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[100px]" style={{ background: 'rgba(123,47,190,0.1)' }} />
         </div>
         <div className="relative max-w-2xl mx-auto">
-          <Logo size={64} />
+          <Logo size={80} />
           <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '1.5rem 0 1rem', color: 'white', lineHeight: 1.05 }}>
             Everything you imagine.
             <br />
@@ -822,7 +822,7 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="px-4 py-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Logo size={28} />
+          <Logo size={42} showText = {true} />
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.2)' }}>
             © {new Date().getFullYear()} Studio42.ai · Everything you imagine. Built by AI.
           </p>
