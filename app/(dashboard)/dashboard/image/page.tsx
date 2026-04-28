@@ -87,6 +87,22 @@ export default function ImagePage() {
     }
   }
 
+  const handleDownload = async (url: string, type: string) => {
+    try {
+      const response = await fetch(url)
+      const blob     = await response.blob()
+      const a        = document.createElement('a')
+      a.href         = URL.createObjectURL(blob)
+      a.download     = `studio42-${Date.now()}.${type === 'VIDEO' ? 'mp4' : 'webp'}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(a.href)
+    } catch {
+      window.open(url, '_blank')
+    }
+  }
+
   return (
     <div className="max-w-5xl">
       <div className="page-header">
@@ -258,6 +274,15 @@ export default function ImagePage() {
                     <Download className="w-3.5 h-3.5" />
                     Download
                   </a>
+
+                  <button
+                    onClick={() => handleDownload(job.outputUrl!, job.type)}
+                    className="btn-secondary text-xs py-1.5 px-3 shadow-lg"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download
+                  </button>
+
                   <button
                     onClick={() => { setJobId(null); setPrompt(prompt) }}
                     className="btn-secondary text-xs py-1.5 px-3 shadow-lg"

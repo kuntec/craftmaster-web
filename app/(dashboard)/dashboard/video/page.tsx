@@ -77,7 +77,7 @@ export default function VideoPage() {
       const blob     = await response.blob()
       const a        = document.createElement('a')
       a.href         = URL.createObjectURL(blob)
-      a.download     = `craftmaster-${Date.now()}.mp4`
+      a.download     = `studio42-${Date.now()}.mp4`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

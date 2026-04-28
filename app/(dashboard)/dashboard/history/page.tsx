@@ -58,7 +58,7 @@ export default function HistoryPage() {
       const blob     = await response.blob()
       const a        = document.createElement('a')
       a.href         = URL.createObjectURL(blob)
-      a.download     = `craftmaster-${Date.now()}.${type === 'VIDEO' ? 'mp4' : 'webp'}`
+      a.download     = `studio42-${Date.now()}.${type === 'VIDEO' ? 'mp4' : 'webp'}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

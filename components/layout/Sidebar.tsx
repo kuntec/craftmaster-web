@@ -43,7 +43,7 @@ export default function Sidebar() {
         className="px-4 py-4"
         style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
       >
-        <Logo size={32} />
+        <Logo size={42} showText={true} />
       </div>
 
       {/* Credits badge */}
