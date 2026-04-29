@@ -110,3 +110,24 @@ export const builderApi = {
   pauseProject: (id: string) => api.patch(`/projects/${id}/pause`),
   resumeProject:(id: string) => api.patch(`/projects/${id}/resume`),
 }
+
+// ── Chat ──────────────────────────────────────────────────
+export const chatApi = {
+  getModels: () =>
+    api.get('/chat/models'),
+
+  listConversations: () =>
+    api.get('/chat/conversations'),
+
+  createConversation: (model: string) =>
+    api.post('/chat/conversations', { model }),
+
+  getConversation: (id: string) =>
+    api.get(`/chat/conversations/${id}`),
+
+  updateConversation: (id: string, data: { title?: string; model?: string }) =>
+    api.patch(`/chat/conversations/${id}`, data),
+
+  deleteConversation: (id: string) =>
+    api.delete(`/chat/conversations/${id}`),
+}

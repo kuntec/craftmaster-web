@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import {
   ImageIcon, Video, Globe, LayoutDashboard,
   CreditCard, History, Settings, LogOut,
-  Zap, Code2, FolderOpen,
+  Zap, Code2, FolderOpen, MessageSquare
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
@@ -15,6 +15,8 @@ const { user, logout, updateUser } = useAuthStore()
 
 const NAV_ITEMS = [
   { label: 'Dashboard', href: '/dashboard',         icon: LayoutDashboard, exact: true },
+  {
+    label: 'AI Chat', href:  '/dashboard/chat', icon:  MessageSquare},
   { label: 'Image',     href: '/dashboard/image',   icon: ImageIcon                    },
   { label: 'Video',     href: '/dashboard/video',   icon: Video                        },
   { label: 'Website',   href: '/dashboard/website', icon: Globe                        },
