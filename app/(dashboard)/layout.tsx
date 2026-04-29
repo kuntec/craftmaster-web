@@ -1,7 +1,10 @@
-export const dynamic = 'force-dynamic'
+'use client'
+
 
 import Sidebar from '@/components/layout/Sidebar'
 import Topbar  from '@/components/layout/Topbar'
+
+export const dynamic = 'force-dynamic'
 
 export default function DashboardLayout({
   children,

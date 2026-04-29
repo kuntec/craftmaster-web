@@ -10,6 +10,8 @@ import { useAuthStore } from '@/store/auth'
 import { Conversation, ChatModel } from '@/types/chat'
 import { formatRelative } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 const MODEL_COLORS: Record<string, string> = {
   openai:    '#10A37F',
   anthropic: '#D97706',
