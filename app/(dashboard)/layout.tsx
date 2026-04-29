@@ -1,16 +1,36 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+import { useEffect, useState } from 'react'
 
 import Sidebar from '@/components/layout/Sidebar'
 import Topbar  from '@/components/layout/Topbar'
 
-export const dynamic = 'force-dynamic'
+
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  },[])
+  if (!mounted) {
+    return (
+      <div
+        className="flex h-screen items-center justify-center"
+        style={{ background: '#0D0F1A' }}
+      >
+        <div
+          className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
+          style={{ borderColor: '#7B2FBE', borderTopColor: 'transparent' }}
+        />
+      </div>
+    )
+  }
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}

@@ -1,5 +1,7 @@
 'use client'
-import { useEffect } from 'react'
+export const dynamic = 'force-dynamic'
+import { useEffect, useState } from 'react'
+
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -25,9 +27,30 @@ export default function AdminPanelLayout({
   const router   = useRouter()
   const pathname = usePathname()
   const { admin, logout } = useAdminStore()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href)
+
+  if (!mounted) {
+    return (
+      <div
+        className="flex h-screen items-center justify-center"
+        style={{ background: '#080A12' }}
+      >
+        <div
+          className="w-8 h-8 rounded-full border-2 animate-spin"
+          style={{ borderColor: '#7B2FBE', borderTopColor: 'transparent' }}
+        />
+      </div>
+    )
+  }
+
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#080A12' }}>
