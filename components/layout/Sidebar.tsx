@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils'
 import Logo from '@/components/ui/Logo'
 import { useEffect, useState } from 'react'
 import { creditsApi } from '@/lib/api'
-const { user, logout, updateUser } = useAuthStore()
 
 const NAV_ITEMS = [
   { label: 'Dashboard', href: '/dashboard',         icon: LayoutDashboard, exact: true },
