@@ -9,7 +9,7 @@ import {
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 import Logo from '@/components/ui/Logo'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { creditsApi } from '@/lib/api'
 const { user, logout, updateUser } = useAuthStore()
 
@@ -31,14 +31,16 @@ const BOTTOM_ITEMS = [
 ]
 
 export default function Sidebar() {
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
-  const { user, logout } = useAuthStore()
+  const { user, logout, updateUser } = useAuthStore()
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href)
 
   // Inside the Sidebar component add:
 useEffect(() => {
+  setMounted(true)
   const refresh = async () => {
     try {
       const res = await creditsApi.balance()
@@ -49,6 +51,8 @@ useEffect(() => {
   }
   refresh()
 }, [])
+
+if (!mounted) return null 
 
   return (
     <aside

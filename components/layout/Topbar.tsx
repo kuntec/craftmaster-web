@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation'
 import { Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
+import { useEffect, useState } from 'react'
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard':          'Dashboard',
@@ -17,10 +18,17 @@ const PAGE_TITLES: Record<string, string> = {
 }
 
 export default function Topbar() {
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const user     = useAuthStore((s) => s.user)
   const title    = PAGE_TITLES[pathname] ?? 'Dashboard'
   const low      = (user?.creditsBalance ?? 0) < 20
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
 
   return (
     <header
