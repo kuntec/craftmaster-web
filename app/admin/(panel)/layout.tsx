@@ -15,7 +15,6 @@ const NAV = [
   { label: 'Users',       href: '/admin/users',        icon: Users                        },
   { label: 'Payments',    href: '/admin/payments',     icon: CreditCard                   },
   { label: 'Generations', href: '/admin/generations',  icon: ImageIcon                    },
-  { label: 'Activity',    href: '/admin/activity',     icon: Activity                     },
 ]
 
 export default function AdminPanelLayout({
