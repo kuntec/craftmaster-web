@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Wand2,
   Download,
@@ -44,13 +44,16 @@ export default function VideoPage() {
     job?.status !== 'COMPLETED' &&
     job?.status !== 'FAILED'
   )
+  const r2SavedRef = useRef(false)
 
   useEffect(() => {
     if (
       job?.status === 'COMPLETED' &&
       job?.outputUrl &&
-      job?.outputUrl.includes('replicate.delivery')
+      job?.outputUrl.includes('replicate.delivery') &&
+      !r2SavedRef.current
     ) {
+      r2SavedRef.current = true
       console.log('Video ready — saving to R2...')
       jobsApi.saveToR2(job._id)
         .then(res => {

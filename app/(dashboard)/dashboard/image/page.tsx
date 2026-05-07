@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Wand2,
   Download,
@@ -59,13 +59,16 @@ export default function ImagePage() {
   )
 
   const COST = 4
+  const r2SavedRef = useRef(false)
 
   useEffect(() => {
     if (
       job?.status === 'COMPLETED' &&
       job?.outputUrl &&
-      job?.outputUrl.includes('replicate.delivery')
+      job?.outputUrl.includes('replicate.delivery') &&
+      !r2SavedRef.current  // ← only run once
     ) {
+      r2SavedRef.current = true  // ← mark immediately
       console.log('Image ready — saving to R2...')
       jobsApi.saveToR2(job._id)
         .then(res => {
