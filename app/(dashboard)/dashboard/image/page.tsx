@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Wand2,
   Download,
@@ -8,10 +8,11 @@ import {
   ImageIcon,
   RefreshCw,
 } from 'lucide-react'
-import { imageApi } from '@/lib/api'
+import { imageApi, jobsApi } from '@/lib/api'
 import { useJobPoller } from '@/hooks/useJobPoller'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
+
 
 const SIZES = [
   { label: 'Square',    width: 1024, height: 1024, ratio: 'aspect-square' },
@@ -58,6 +59,23 @@ export default function ImagePage() {
   )
 
   const COST = 4
+
+  useEffect(() => {
+    if (
+      job?.status === 'COMPLETED' &&
+      job?.outputUrl &&
+      job?.outputUrl.includes('replicate.delivery')
+    ) {
+      console.log('Image ready — saving to R2...')
+      jobsApi.saveToR2(job._id)
+        .then(res => {
+          console.log('Saved to R2:', res.data.outputUrl)
+        })
+        .catch(err => {
+          console.error('R2 save failed (non-critical):', err.message)
+        })
+    }
+  }, [job?.status, job?._id])
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return

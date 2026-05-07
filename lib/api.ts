@@ -84,6 +84,9 @@ export const jobsApi = {
     api.get('/jobs', { params }),
   get: (id: string) =>
     api.get(`/jobs/${id}`),
+  // Add to jobsApi
+saveToR2: (id: string) =>
+  api.post(`/jobs/${id}/save-to-r2`),
 }
 
 // ── Builder ───────────────────────────────────────────────
@@ -130,4 +133,5 @@ export const chatApi = {
 
   deleteConversation: (id: string) =>
     api.delete(`/chat/conversations/${id}`),
+  
 }

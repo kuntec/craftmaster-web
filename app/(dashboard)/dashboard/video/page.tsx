@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Wand2,
   Download,
@@ -9,7 +9,7 @@ import {
   Clock,
   RefreshCw,
 } from 'lucide-react'
-import { videoApi } from '@/lib/api'
+import { videoApi, jobsApi } from '@/lib/api'
 import { useJobPoller } from '@/hooks/useJobPoller'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
@@ -44,6 +44,23 @@ export default function VideoPage() {
     job?.status !== 'COMPLETED' &&
     job?.status !== 'FAILED'
   )
+
+  useEffect(() => {
+    if (
+      job?.status === 'COMPLETED' &&
+      job?.outputUrl &&
+      job?.outputUrl.includes('replicate.delivery')
+    ) {
+      console.log('Video ready — saving to R2...')
+      jobsApi.saveToR2(job._id)
+        .then(res => {
+          console.log('Video saved to R2:', res.data.outputUrl)
+        })
+        .catch(err => {
+          console.error('R2 video save failed (non-critical):', err.message)
+        })
+    }
+  }, [job?.status, job?._id])
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
