@@ -58,7 +58,6 @@ body {
 
 @layer components {
 
-  /* ── Buttons ── */
   .btn {
     @apply inline-flex items-center justify-center gap-2
            px-4 py-2 rounded-lg text-sm font-medium
@@ -68,19 +67,16 @@ body {
 
   .btn-primary {
     @apply btn bg-indigo-500 hover:bg-indigo-600
-           active:bg-indigo-700 text-white
-           shadow-sm hover:shadow-md;
+           active:bg-indigo-700 text-white shadow-sm hover:shadow-md;
   }
 
   .btn-secondary {
     @apply btn bg-white hover:bg-gray-50
-           border border-gray-200 text-gray-700
-           shadow-sm;
+           border border-gray-200 text-gray-700 shadow-sm;
   }
 
   .btn-ghost {
-    @apply btn hover:bg-gray-100 text-gray-600
-           hover:text-gray-900;
+    @apply btn hover:bg-gray-100 text-gray-600 hover:text-gray-900;
   }
 
   .btn-danger {
@@ -88,10 +84,8 @@ body {
            text-red-600 border border-red-200;
   }
 
-  /* ── Cards ── */
   .card {
-    @apply bg-white border border-gray-200
-           rounded-xl shadow-sm;
+    @apply bg-white border border-gray-200 rounded-xl shadow-sm;
   }
 
   .card-hover {
@@ -99,7 +93,6 @@ body {
            hover:shadow-md hover:border-gray-300;
   }
 
-  /* ── Inputs ── */
   .input {
     @apply w-full px-3 py-2.5 rounded-lg text-sm
            bg-gray-50 border border-gray-200
@@ -114,7 +107,6 @@ body {
     @apply block text-sm font-medium text-gray-700 mb-1.5;
   }
 
-  /* ── Badges ── */
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5
            rounded-full text-xs font-medium;
@@ -126,21 +118,11 @@ body {
   .badge-info    { @apply badge bg-indigo-50 text-indigo-700; }
   .badge-gray    { @apply badge bg-gray-100 text-gray-600; }
 
-  /* ── Shimmer skeleton ── */
   .shimmer {
     @apply animate-pulse bg-gray-100 rounded-lg;
   }
 
-  /* ── Page header ── */
-  .page-header {
-    @apply mb-6;
-  }
-
-  .page-title {
-    @apply text-xl font-semibold text-gray-900;
-  }
-
-  .page-subtitle {
-    @apply text-sm text-gray-500 mt-1;
-  }
+  .page-header { @apply mb-6; }
+  .page-title  { @apply text-xl font-semibold text-gray-900; }
+  .page-subtitle { @apply text-sm text-gray-500 mt-1; }
 }

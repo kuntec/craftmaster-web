@@ -1,5 +1,6 @@
 'use client'
 export const dynamic = 'force-dynamic'
+
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react'
 import { chatApi } from '@/lib/api'
 import { useAuthStore } from '@/store/auth'
-import { Conversation, Message, ChatModel } from '@/types/chat'
+import { Conversation, ChatModel } from '@/types/chat'
 import { cn } from '@/lib/utils'
 import Cookies from 'js-cookie'
 
@@ -30,13 +31,6 @@ function MessageContent({ content }: { content: string }) {
   )
 }
 
-// ── Model badge ───────────────────────────────────────────
-const PROVIDER_COLORS: Record<string, string> = {
-  openai:    '#10A37F',
-  anthropic: '#D97706',
-  google:    '#4F8EF7',
-}
-
 export default function ConversationPage() {
   const params = useParams()
   const router = useRouter()
@@ -44,18 +38,18 @@ export default function ConversationPage() {
 
   const { user, updateUser } = useAuthStore()
 
-  const [conversation, setConversation] = useState<Conversation | null>(null)
-  const [models,       setModels]       = useState<ChatModel[]>([])
-  const [loading,      setLoading]      = useState(true)
-  const [sending,      setSending]      = useState(false)
-  const [input,        setInput]        = useState('')
-  const [streamText,   setStreamText]   = useState('')
+  const [conversation,  setConversation]  = useState<Conversation | null>(null)
+  const [models,        setModels]        = useState<ChatModel[]>([])
+  const [loading,       setLoading]       = useState(true)
+  const [sending,       setSending]       = useState(false)
+  const [input,         setInput]         = useState('')
+  const [streamText,    setStreamText]    = useState('')
   const [selectedModel, setSelectedModel] = useState('gpt-4o-mini')
-  const [showModels,   setShowModels]   = useState(false)
-  const [copied,       setCopied]       = useState<number | null>(null)
-  const [error,        setError]        = useState('')
+  const [showModels,    setShowModels]    = useState(false)
+  const [copied,        setCopied]        = useState<number | null>(null)
+  const [error,         setError]         = useState('')
 
-  const bottomRef  = useRef<HTMLDivElement>(null)
+  const bottomRef   = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Load conversation + models
@@ -71,7 +65,7 @@ export default function ConversationPage() {
     .finally(() => setLoading(false))
   }, [id])
 
-  // Scroll to bottom
+  // Scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [conversation?.messages, streamText])
@@ -104,19 +98,19 @@ export default function ConversationPage() {
       }
     })
 
-    // Resize textarea
+    // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
     }
 
     try {
-      const token = Cookies.get('cm_token')
+      const token  = Cookies.get('cm_token')
       const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
       const response = await fetch(
         `${apiUrl}/chat/conversations/${id}/message`,
         {
-          method: 'POST',
+          method:  'POST',
           headers: {
             'Content-Type':  'application/json',
             'Authorization': `Bearer ${token}`,
@@ -134,8 +128,8 @@ export default function ConversationPage() {
       }
 
       // Read stream
-      const reader  = response.body!.getReader()
-      const decoder = new TextDecoder()
+      const reader   = response.body!.getReader()
+      const decoder  = new TextDecoder()
       let   fullText = ''
 
       while (true) {
@@ -155,7 +149,6 @@ export default function ConversationPage() {
               setStreamText(fullText)
             }
             if (data.done) {
-              // Add assistant message to conversation
               setConversation(prev => {
                 if (!prev) return prev
                 return {
@@ -170,26 +163,21 @@ export default function ConversationPage() {
                 }
               })
               setStreamText('')
-
-              // Deduct credits from local store
               updateUser({
                 creditsBalance: (user.creditsBalance ?? 0) - (currentModel?.credits ?? 1),
               })
             }
-          } catch (parseErr) {
+          } catch {
             // skip malformed chunks
           }
         }
       }
     } catch (err: any) {
       setError(err.message || 'Failed to send message')
-      // Remove optimistic message on error
+      // Remove optimistic user message on error
       setConversation(prev => {
         if (!prev) return prev
-        return {
-          ...prev,
-          messages: prev.messages.slice(0, -1),
-        }
+        return { ...prev, messages: prev.messages.slice(0, -1) }
       })
     } finally {
       setSending(false)
@@ -219,93 +207,87 @@ export default function ConversationPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#7B2FBE' }} />
+        <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
       </div>
     )
   }
 
   if (!conversation) return null
 
-  const allMessages = conversation.messages
-
   return (
     <div className="flex flex-col h-[calc(100vh-56px)] -m-6">
 
+      {/* ── Styles ── */}
       <style>{`
-        .message-content { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.85); }
-        .message-content strong { color: white; font-weight: 600; }
-        .message-content em { font-style: italic; }
+        .message-content {
+          font-size: 14px;
+          line-height: 1.7;
+          color: #111827;
+        }
+        .message-content strong { color: #111827; font-weight: 600; }
+        .message-content em { font-style: italic; color: #374151; }
         .code-block {
-          background: rgba(0,0,0,0.4);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #f3f4f6;
+          border: 1px solid #e5e7eb;
           border-radius: 10px;
           padding: 12px 16px;
           margin: 8px 0;
           overflow-x: auto;
           font-size: 13px;
-          font-family: 'Fira Code', monospace;
-          color: #e2e8f0;
+          font-family: 'Fira Code', 'Consolas', monospace;
+          color: #1f2937;
+          white-space: pre;
         }
         .inline-code {
-          background: rgba(255,255,255,0.1);
+          background: #f3f4f6;
           border-radius: 4px;
           padding: 1px 6px;
           font-family: monospace;
           font-size: 13px;
-          color: #C4A8FF;
+          color: #6366f1;
         }
       `}</style>
 
       {/* ── Top bar ── */}
-      <div
-        className="flex items-center justify-between px-6 py-3 shrink-0"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(13,15,26,0.95)' }}
-      >
+      <div className="flex items-center justify-between px-6 py-3 shrink-0 bg-white border-b border-gray-200">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push('/dashboard/chat')}
-            className="flex items-center gap-1.5 text-sm transition-all"
-            style={{ color: 'rgba(255,255,255,0.4)' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'white')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+            className="btn-ghost text-sm -ml-2"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
-          <p className="text-sm font-semibold text-white truncate max-w-xs">
+          <span className="text-gray-300">·</span>
+          <p className="text-sm font-semibold text-gray-900 truncate max-w-xs">
             {conversation.title}
           </p>
         </div>
 
-        {/* Credits display */}
-        <div
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl"
-          style={{ background: 'rgba(123,47,190,0.12)', border: '1px solid rgba(123,47,190,0.25)' }}
-        >
-          <Zap className="w-3.5 h-3.5" fill="currentColor" style={{ color: '#C4A8FF' }} />
-          <span className="text-xs font-bold" style={{ color: '#C4A8FF' }}>
+        {/* Credits */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200">
+          <Zap className="w-3.5 h-3.5 text-indigo-500" fill="currentColor" />
+          <span className="text-xs font-bold text-indigo-600">
             {user?.creditsBalance ?? 0} credits
           </span>
         </div>
       </div>
 
       {/* ── Messages ── */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 bg-gray-50">
 
-        {allMessages.length === 0 && !streamText && (
+        {/* Empty state */}
+        {conversation.messages.length === 0 && !streamText && (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
               style={{ background: 'linear-gradient(135deg, #7B2FBE, #4F8EF7)' }}
             >
               <Send className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="text-white font-semibold">Start the conversation</p>
-              <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                Type a message below to begin
-              </p>
+              <p className="text-gray-900 font-semibold">Start the conversation</p>
+              <p className="text-sm text-gray-400 mt-1">Type a message below to begin</p>
             </div>
             {/* Starter prompts */}
             <div className="flex flex-wrap gap-2 justify-center max-w-lg mt-2">
@@ -315,19 +297,12 @@ export default function ConversationPage() {
                 'Review my marketing strategy',
                 'Help me debug this code',
                 'Write a professional email',
-                'Summarize this article',
+                'Summarize this topic',
               ].map(p => (
                 <button
                   key={p}
                   onClick={() => setInput(p)}
-                  className="px-3 py-1.5 rounded-xl text-xs transition-all"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border:     '1px solid rgba(255,255,255,0.08)',
-                    color:      'rgba(255,255,255,0.5)',
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(123,47,190,0.4)'; (e.currentTarget as HTMLButtonElement).style.color = 'white' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.5)' }}
+                  className="px-3 py-1.5 rounded-xl text-xs text-gray-500 border border-gray-200 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
                 >
                   {p}
                 </button>
@@ -336,7 +311,8 @@ export default function ConversationPage() {
           </div>
         )}
 
-        {allMessages.map((msg, i) => (
+        {/* Messages */}
+        {conversation.messages.map((msg, i) => (
           <div
             key={i}
             className={cn(
@@ -347,11 +323,11 @@ export default function ConversationPage() {
             {/* Assistant avatar */}
             {msg.role === 'assistant' && (
               <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold text-white"
+                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold text-white shadow-sm"
                 style={{
                   background: `linear-gradient(135deg, ${
-                    models.find(m => m.id === (msg.model || selectedModel))?.color || '#7B2FBE'
-                  }, #4F8EF7)`,
+                    models.find(m => m.id === (msg.model || selectedModel))?.color || '#6366f1'
+                  }, #6366f1)`,
                 }}
               >
                 AI
@@ -362,15 +338,13 @@ export default function ConversationPage() {
             <div
               className={cn(
                 'max-w-[75%] rounded-2xl px-4 py-3 relative group',
-                msg.role === 'user' ? 'rounded-tr-sm' : 'rounded-tl-sm'
+                msg.role === 'user'
+                  ? 'rounded-tr-sm text-white'
+                  : 'rounded-tl-sm bg-white border border-gray-200 shadow-sm'
               )}
               style={msg.role === 'user' ? {
                 background: 'linear-gradient(135deg, #7B2FBE, #4F8EF7)',
-                color: 'white',
-              } : {
-                background: 'rgba(255,255,255,0.05)',
-                border:     '1px solid rgba(255,255,255,0.08)',
-              }}
+              } : {}}
             >
               {msg.role === 'user' ? (
                 <p style={{ fontSize: '14px', lineHeight: 1.65, color: 'white' }}>
@@ -380,25 +354,24 @@ export default function ConversationPage() {
                 <MessageContent content={msg.content} />
               )}
 
-              {/* Copy button for assistant messages */}
+              {/* Copy button for assistant */}
               {msg.role === 'assistant' && (
                 <button
                   onClick={() => handleCopy(msg.content, i)}
-                  className="absolute top-2 right-2 w-6 h-6 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
-                  style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all bg-gray-100 hover:bg-gray-200"
                 >
                   {copied === i
-                    ? <Check className="w-3 h-3" style={{ color: '#34D399' }} />
-                    : <Copy className="w-3 h-3" />
+                    ? <Check className="w-3 h-3 text-emerald-500" />
+                    : <Copy  className="w-3 h-3 text-gray-500" />
                   }
                 </button>
               )}
 
               {/* Credits used */}
               {msg.role === 'assistant' && msg.credits && (
-                <div className="flex items-center gap-1 mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                  <Zap className="w-3 h-3" style={{ color: '#C4A8FF' }} />
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                <div className="flex items-center gap-1 mt-2 pt-2 border-t border-gray-100">
+                  <Zap className="w-3 h-3 text-indigo-400" />
+                  <span className="text-[10px] text-gray-400">
                     {msg.credits} credits
                   </span>
                 </div>
@@ -411,50 +384,41 @@ export default function ConversationPage() {
         {streamText && (
           <div className="flex gap-3 justify-start">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold text-white"
-              style={{ background: `linear-gradient(135deg, ${currentModel?.color || '#7B2FBE'}, #4F8EF7)` }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold text-white shadow-sm"
+              style={{ background: `linear-gradient(135deg, ${currentModel?.color || '#6366f1'}, #6366f1)` }}
             >
               AI
             </div>
-            <div
-              className="max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
+            <div className="max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3 bg-white border border-gray-200 shadow-sm">
               <MessageContent content={streamText} />
               <span
-                className="inline-block w-2 h-4 ml-0.5 animate-pulse rounded-sm"
-                style={{ background: '#7B2FBE', verticalAlign: 'middle' }}
+                className="inline-block w-2 h-4 ml-0.5 animate-pulse rounded-sm bg-indigo-400"
+                style={{ verticalAlign: 'middle' }}
               />
             </div>
           </div>
         )}
 
-        {/* Thinking indicator */}
+        {/* Thinking dots */}
         {sending && !streamText && (
           <div className="flex gap-3 justify-start">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold text-white"
-              style={{ background: `linear-gradient(135deg, ${currentModel?.color || '#7B2FBE'}, #4F8EF7)` }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold text-white shadow-sm"
+              style={{ background: `linear-gradient(135deg, ${currentModel?.color || '#6366f1'}, #6366f1)` }}
             >
               AI
             </div>
-            <div
-              className="rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
+            <div className="rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2 bg-white border border-gray-200 shadow-sm">
               <div className="flex gap-1">
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
-                    className="w-2 h-2 rounded-full animate-bounce"
-                    style={{
-                      background: '#7B2FBE',
-                      animationDelay: `${i * 0.15}s`,
-                    }}
+                    className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce"
+                    style={{ animationDelay: `${i * 0.15}s` }}
                   />
                 ))}
               </div>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <span className="text-xs text-gray-400">
                 {currentModel?.name} is thinking…
               </span>
             </div>
@@ -465,17 +429,13 @@ export default function ConversationPage() {
       </div>
 
       {/* ── Input area ── */}
-      <div
-        className="shrink-0 px-6 py-4"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(13,15,26,0.95)' }}
-      >
+      <div className="shrink-0 px-6 py-4 bg-white border-t border-gray-200">
+
+        {/* Error */}
         {error && (
-          <div
-            className="flex items-center gap-2 p-3 rounded-xl text-sm mb-3"
-            style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#FCA5A5' }}
-          >
+          <div className="flex items-center gap-2 p-3 rounded-xl text-sm mb-3 bg-red-50 border border-red-200 text-red-600">
             {error}
-            <button onClick={() => setError('')} className="ml-auto">
+            <button onClick={() => setError('')} className="ml-auto text-red-400 hover:text-red-600">
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -486,52 +446,49 @@ export default function ConversationPage() {
           <div className="relative">
             <button
               onClick={() => setShowModels(!showModels)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border"
               style={{
-                background: `${currentModel?.color || '#7B2FBE'}18`,
-                border:     `1px solid ${currentModel?.color || '#7B2FBE'}30`,
-                color:      currentModel?.color || '#C4A8FF',
+                background:   `${currentModel?.color || '#6366f1'}12`,
+                borderColor:  `${currentModel?.color || '#6366f1'}30`,
+                color:        currentModel?.color || '#6366f1',
               }}
             >
               <span>{currentModel?.name || 'Select model'}</span>
               <span
                 className="text-[10px] px-1.5 py-0.5 rounded font-bold"
-                style={{ background: `${currentModel?.color}25` }}
+                style={{ background: `${currentModel?.color}20` }}
               >
                 ⚡ {currentModel?.credits} cr
               </span>
               <ChevronDown className="w-3 h-3" />
             </button>
 
+            {/* Model dropdown */}
             {showModels && (
-              <div
-                className="absolute bottom-full left-0 mb-2 w-72 rounded-2xl overflow-hidden shadow-2xl z-20"
-                style={{ background: '#0D0F1A', border: '1px solid rgba(255,255,255,0.1)' }}
-              >
+              <div className="absolute bottom-full left-0 mb-2 w-72 rounded-2xl overflow-hidden shadow-xl z-20 bg-white border border-gray-200">
                 {models.map(m => (
                   <button
                     key={m.id}
                     onClick={() => { setSelectedModel(m.id); setShowModels(false) }}
-                    className="w-full flex items-center justify-between px-4 py-3 text-left transition-all"
+                    className="w-full flex items-center justify-between px-4 py-3 text-left transition-all border-b border-gray-100 last:border-0"
                     style={{
-                      background: selectedModel === m.id ? `${m.color}12` : 'transparent',
-                      borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      background: selectedModel === m.id ? `${m.color}08` : 'white',
                     }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = `${m.color}10` }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = selectedModel === m.id ? `${m.color}12` : 'transparent' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = `${m.color}06` }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = selectedModel === m.id ? `${m.color}08` : 'white' }}
                   >
                     <div>
-                      <p className="text-sm font-semibold text-white">{m.name}</p>
-                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{m.description}</p>
+                      <p className="text-sm font-semibold text-gray-900">{m.name}</p>
+                      <p className="text-xs text-gray-400">{m.description}</p>
                     </div>
                     <div className="text-right shrink-0 ml-3">
                       <span
                         className="text-xs font-bold px-2 py-0.5 rounded-lg"
-                        style={{ background: `${m.color}20`, color: m.color }}
+                        style={{ background: `${m.color}15`, color: m.color }}
                       >
                         {m.badge}
                       </span>
-                      <p className="text-[10px] mt-1" style={{ color: '#C4A8FF' }}>
+                      <p className="text-[10px] mt-1" style={{ color: m.color }}>
                         ⚡ {m.credits} cr/msg
                       </p>
                     </div>
@@ -541,16 +498,13 @@ export default function ConversationPage() {
             )}
           </div>
 
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          <span className="text-xs text-gray-400">
             Balance: {user?.creditsBalance ?? 0} credits
           </span>
         </div>
 
         {/* Text input */}
-        <div
-          className="flex items-end gap-3 rounded-2xl px-4 py-3"
-          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-        >
+        <div className="flex items-end gap-3 rounded-2xl px-4 py-3 bg-gray-50 border border-gray-200 focus-within:border-indigo-300 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
           <textarea
             ref={textareaRef}
             value={input}
@@ -559,13 +513,8 @@ export default function ConversationPage() {
             placeholder={`Message ${currentModel?.name || 'AI'}…`}
             disabled={sending}
             rows={1}
-            className="flex-1 bg-transparent text-sm text-white resize-none focus:outline-none"
-            style={{
-              minHeight:   '24px',
-              maxHeight:   '200px',
-              lineHeight:  '1.6',
-              color:       'white',
-            }}
+            className="flex-1 bg-transparent text-sm text-gray-900 resize-none focus:outline-none placeholder:text-gray-400"
+            style={{ minHeight: '24px', maxHeight: '200px', lineHeight: '1.6' }}
           />
           <button
             onClick={handleSend}
@@ -578,15 +527,16 @@ export default function ConversationPage() {
           >
             {sending
               ? <Loader2 className="w-4 h-4 text-white animate-spin" />
-              : <Send className="w-4 h-4 text-white" />
+              : <Send    className="w-4 h-4 text-white" />
             }
           </button>
         </div>
 
-        <p className="text-center text-[11px] mt-2" style={{ color: 'rgba(255,255,255,0.15)' }}>
+        <p className="text-center text-[11px] mt-2 text-gray-400">
           Press Enter to send · Shift+Enter for new line · Switch models anytime
         </p>
       </div>
+
     </div>
   )
 }
