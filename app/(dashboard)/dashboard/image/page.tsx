@@ -75,8 +75,8 @@ export default function ImagePage() {
         width:  size.width,
         height: size.height,
       })
-
-      setJobId(res.data.jobId)
+      setJobId(res.data.job._id)
+      //setJobId(res.data.jobId)
       if (user) updateUser({ creditsBalance: user.creditsBalance - COST })
     } catch (err: any) {
       setApiError(
