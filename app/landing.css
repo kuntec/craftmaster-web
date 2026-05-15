@@ -15,3 +15,46 @@
 .marquee-right {
   animation: marquee-right 40s linear infinite;
 }
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cabinet+Grotesk:wght@500;700;800;900&display=swap');
+  .display-font { font-family: 'Cabinet Grotesk', 'DM Sans', sans-serif; }
+  @keyframes marquee-left  { 0%{transform:translateX(0)}   100%{transform:translateX(-50%)} }
+  @keyframes marquee-right { 0%{transform:translateX(-50%)} 100%{transform:translateX(0)}   }
+  @keyframes float-slow { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-8px)} }
+  @keyframes pulse-glow { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+  .marquee-left  { animation: marquee-left  50s linear infinite; }
+  .marquee-right { animation: marquee-right 45s linear infinite; }
+  .float-anim { animation: float-slow 6s ease-in-out infinite; }
+  .pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+  textarea::placeholder, input::placeholder { color: rgba(255,255,255,0.2); }
+  .bento-card { transition: transform 0.3s ease, border-color 0.3s ease; }
+  .bento-card:hover { transform: translateY(-3px); }
+  .tool-feature { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  @keyframes mesh-move-1 {
+0%   { transform: translate(0px, 0px) scale(1); }
+33%  { transform: translate(30px, -20px) scale(1.05); }
+66%  { transform: translate(-20px, 15px) scale(0.95); }
+100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes mesh-move-2 {
+0%   { transform: translate(0px, 0px) scale(1); }
+33%  { transform: translate(-25px, 20px) scale(1.08); }
+66%  { transform: translate(20px, -10px) scale(0.97); }
+100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes mesh-move-3 {
+0%   { transform: translate(0px, 0px) scale(1); }
+33%  { transform: translate(15px, 25px) scale(1.03); }
+66%  { transform: translate(-30px, -15px) scale(1.06); }
+100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes mesh-move-4 {
+0%   { transform: translate(0px, 0px) scale(1); }
+33%  { transform: translate(20px, -30px) scale(0.95); }
+66%  { transform: translate(-15px, 20px) scale(1.05); }
+100% { transform: translate(0px, 0px) scale(1); }
+}
+.mesh-orb-1 { animation: mesh-move-1 12s ease-in-out infinite; }
+.mesh-orb-2 { animation: mesh-move-2 15s ease-in-out infinite; }
+.mesh-orb-3 { animation: mesh-move-3 10s ease-in-out infinite; }
+.mesh-orb-4 { animation: mesh-move-4 18s ease-in-out infinite; }
