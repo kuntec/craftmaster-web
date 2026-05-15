@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import QueryProvider from '@/components/providers/QueryProvider'
 import './globals.css'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title:       'Studio42 — Everything you imagine. Built by AI.',
@@ -32,6 +33,7 @@ export default function RootLayout({
         <QueryProvider>
           {children}
         </QueryProvider>
+        <Analytics />
       </body>
     </html>
   )
