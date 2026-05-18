@@ -79,7 +79,7 @@ export default function WebsitePage() {
     const url  = URL.createObjectURL(blob)
     const a    = document.createElement('a')
     a.href     = url
-    a.download = `craftmaster-website-${Date.now()}.html`
+    a.download = `studio42-ai-${Date.now()}.html`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

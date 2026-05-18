@@ -151,10 +151,10 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState('')
 
-  const fillDemo = () => {
-    setEmail('demo@studio42.ai')
-    setPassword('demo123456')
-  }
+  // const fillDemo = () => {
+  //   setEmail('demo@studio42.ai')
+  //   setPassword('demo123456')
+  // }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -228,13 +228,13 @@ export default function LoginPage() {
         </div>
 
         {/* Demo button */}
-        <button
+        {/* <button
           type="button"
           onClick={fillDemo}
           className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-500 text-sm font-medium hover:bg-indigo-50 hover:border-indigo-400 transition-all"
         >
           🧪 Try demo account
-        </button>
+        </button> */}
 
         {error && (
           <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
