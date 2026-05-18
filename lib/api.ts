@@ -64,10 +64,9 @@ export const imageApi = {
 
 // ── Video ─────────────────────────────────────────────────
 export const videoApi = {
-  generate: (data: { prompt: string; duration?: number }) =>
-    api.post('/video/generate', data),
-  info: () =>
-    api.get('/video/info'),
+  generate:  (data: any) => api.post('/video/generate', data),
+  getInfo:   ()          => api.get('/video/info'),
+  getModels: ()          => api.get('/video/models'),
 }
 
 // ── Website ───────────────────────────────────────────────
