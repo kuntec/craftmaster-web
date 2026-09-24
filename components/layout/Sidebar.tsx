@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import {
   ImageIcon, Video, Globe, LayoutDashboard,
   CreditCard, History, Settings, LogOut,
-  Zap, Code2, FolderOpen, MessageSquare
+  Zap, Code2, FolderOpen, MessageSquare, Clapperboard
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { label: 'Video',     href: '/dashboard/video',   icon: Video                        },
   { label: 'Website',   href: '/dashboard/website', icon: Globe                        },
   { label: 'AI Builder',href: '/dashboard/builder', icon: Code2                        },
+  { label: 'Video Studio', href: '/dashboard/video-studio', icon: Clapperboard, badge: 'New' },
 ]
 
 const BOTTOM_ITEMS = [
@@ -136,7 +137,12 @@ if (!mounted) return null
                   color: '#C4A8FF',
                 } : {}}
               />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {(item as any).badge && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'linear-gradient(135deg,#7B2FBE,#4F8EF7)', color: 'white' }}>
+                  {(item as any).badge}
+                </span>
+              )}
             </Link>
           )
         })}

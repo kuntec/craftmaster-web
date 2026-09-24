@@ -124,6 +124,8 @@ export default function HeroImage() {
           ))}
         </div>
 
+        
+
         {/* CTAs */}
         <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
           <Link

@@ -521,9 +521,74 @@ export default function LandingV2() {
             One wallet. Pay only when you create. Credits never expire.
           </p>
 
-          {/* ── HERO GENERATOR ── */}
-          <div style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(123,47,190,0.25)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: '0 0 80px rgba(123,47,190,0.1)', marginBottom: '0.75rem' }}>
-            {/* Tool tabs */}
+          {/* CTAs */}
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3.5rem' }}>
+            <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 28px', borderRadius: '14px', fontSize: '15px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G, boxShadow: '0 8px 32px rgba(123,47,190,0.35)' }}>
+              Start free — 30 credits <ArrowRight size={16} />
+            </Link>
+            <a href="#try-free" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 24px', borderRadius: '14px', fontSize: '15px', fontWeight: 600, color: 'rgba(255,255,255,0.65)', border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none' }}>
+              Try without signup
+            </a>
+          </div>
+
+          {/* ── HERO TABS ── */}
+          <div id="hero-tabs" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: '0 0 100px rgba(123,47,190,0.08)' }}>
+            {/* Tab bar */}
+            <div style={{ display: 'flex', gap: '2px', padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.2)' }}>
+              {HERO_TABS.map(tab => {
+                const Icon   = tab.icon
+                const active = heroTab === tab.id
+                return (
+                  <button key={tab.id} onClick={() => setHeroTab(tab.id)}
+                    style={{
+                      flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                      padding: '9px 6px', borderRadius: '12px', border: active ? '1px solid rgba(123,47,190,0.3)' : '1px solid transparent',
+                      cursor: 'pointer', fontSize: '13px', fontWeight: 600, transition: 'all 0.2s',
+                      background: active ? 'rgba(123,47,190,0.18)' : 'transparent',
+                      color: active ? 'white' : 'rgba(255,255,255,0.35)',
+                    }}
+                  >
+                    <Icon size={14} style={{ color: active ? '#C4A8FF' : undefined }} />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+            {/* Tab content */}
+            <div style={{ padding: '1.5rem' }}>
+              <HeroTabContent tab={heroTab} />
+            </div>
+          </div>
+
+          {/* Trust line */}
+          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.25)', marginTop: '1rem' }}>
+            No credit card required · 30 free credits on signup · Image, Website & Builder free to try
+          </p>
+        </div>
+      </section>
+
+      {/* ── MODEL MARQUEE ── */}
+      <section style={{ padding: '2.5rem 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p style={{ textAlign: 'center', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
+          Powered by the world's best AI models
+        </p>
+        <ModelMarquee />
+      </section>
+
+      {/* ── FREE GENERATOR ── */}
+      <section id="try-free" style={{ padding: '5rem 1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '5px 14px', borderRadius: '100px', border: '1px solid rgba(0,194,255,0.25)', background: 'rgba(0,194,255,0.06)', marginBottom: '1rem' }}>
+              <Sparkles size={12} color="#00C2FF" />
+              <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#00C2FF' }}>Try it free — no account needed</span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, letterSpacing: '-0.02em', color: 'white', margin: 0 }}>
+              Create something <span style={gradText}>right now.</span>
+            </h2>
+          </div>
+
+          <div style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(123,47,190,0.2)', background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)' }}>
             <div style={{ display: 'flex', gap: '4px', padding: '10px', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
               {TOOLS.map(tool => {
                 const Icon   = tool.icon
@@ -538,131 +603,105 @@ export default function LandingV2() {
                 )
               })}
             </div>
-            {/* Prompt input */}
-            <div style={{ padding: '1.25rem 1.5rem 0.5rem' }}>
+            <div style={{ padding: '1.25rem 1.5rem' }}>
               <textarea rows={3} disabled={isGenerating} value={prompt} onChange={e => setPrompt(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGenerate() } }}
                 placeholder={currentTool.placeholder}
-                style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: '16px', lineHeight: 1.6, color: 'white', fontFamily: 'inherit' }}
+                style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: '15px', lineHeight: 1.6, color: 'white', fontFamily: 'inherit' }}
               />
             </div>
-            {/* Footer */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 1.5rem 1.25rem', flexWrap: 'wrap', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 600, padding: '3px 10px', borderRadius: '100px', background: 'rgba(123,47,190,0.15)', border: '1px solid rgba(123,47,190,0.25)', color: '#C4A8FF' }}>
-                  {currentTool.cost === 'Free' ? '✨ Free' : '\u26a1 ' + currentTool.cost}
-                </span>
-                <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{currentTool.free ? 'Free · No signup needed' : 'Requires account'}</span>
+                <span style={{ fontSize: '12px', fontWeight: 600, padding: '3px 10px', borderRadius: '100px', background: 'rgba(123,47,190,0.15)', border: '1px solid rgba(123,47,190,0.25)', color: '#C4A8FF' }}>⚡ {currentTool.cost}</span>
+                <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{currentTool.free ? 'Free · No signup' : 'Requires account'}</span>
               </div>
               <button onClick={handleGenerate} disabled={!prompt.trim() || isGenerating}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '11px 24px', borderRadius: '14px', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: 700, color: 'white', background: G, opacity: (!prompt.trim() || isGenerating) ? 0.4 : 1, transition: 'opacity 0.2s' }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '11px 22px', borderRadius: '14px', border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: 700, color: 'white', background: G, opacity: (!prompt.trim() || isGenerating) ? 0.4 : 1, transition: 'opacity 0.2s' }}
               >
                 {isGenerating ? <><Loader2 size={14} className="animate-spin" /> Generating…</> : <><Sparkles size={14} /> Generate</>}
               </button>
             </div>
           </div>
-
-          {/* Error */}
           {error && (
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#FCA5A5', fontSize: '13px' }}>
+            <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#FCA5A5', fontSize: '13px' }}>
               <AlertCircle size={14} /> {error}
             </div>
           )}
-
-          {/* Result */}
-          {(isGenerating || hasResult) && (
-            <div ref={resultRef} style={{ marginBottom: '1.5rem', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(123,47,190,0.2)', background: 'rgba(255,255,255,0.02)' }}>
-              {isGenerating && (
-                <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-                  <div style={{ width: '50px', height: '50px', borderRadius: '16px', background: G, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Loader2 size={24} color="white" className="animate-spin" />
-                  </div>
-                  <p style={{ fontSize: '15px', fontWeight: 600, color: 'white', margin: 0 }}>
-                    {activeTool === 'image' ? 'Creating your image…' : activeTool === 'website' ? 'Building your website…' : 'Analyzing your project…'}
-                  </p>
-                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.35)', margin: 0 }}>Usually 15–30 seconds</p>
-                </div>
-              )}
-              {imageUrl && !isGenerating && (
-                <div className="group" style={{ position: 'relative' }}>
-                  <img src={imageUrl} alt={prompt} style={{ width: '100%', maxHeight: '500px', objectFit: 'contain', background: 'black', display: 'block' }} />
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                    <Link href="/register" style={{ background: 'white', color: '#111', fontWeight: 700, padding: '12px 24px', borderRadius: '14px', fontSize: '14px', textDecoration: 'none' }}>
-                      Sign up to download full resolution →
-                    </Link>
-                  </div>
-                </div>
-              )}
-              {websiteHtml && (
-                <div>
-                  <iframe srcDoc={websiteHtml} style={{ width: '100%', height: '480px', border: 'none', display: 'block' }} sandbox="allow-scripts" title="Preview" />
-                  <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-                    <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Sign up to download without watermark</p>
-                    <Link href="/register" style={{ padding: '8px 18px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G }}>Get 30 free credits →</Link>
-                  </div>
-                </div>
-              )}
-              {builderPlans.length > 0 && !isGenerating && (
-                <div style={{ padding: '1.5rem' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '1rem' }}>
-                    {builderPlans.map(plan => {
-                      const isSel = selectedPlan?.plan === plan.plan
-                      return (
-                        <div key={plan.plan} onClick={() => setSelectedPlan(plan)} style={{ borderRadius: '14px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s', background: isSel ? 'rgba(123,47,190,0.12)' : 'rgba(255,255,255,0.03)', border: isSel ? '2px solid rgba(123,47,190,0.5)' : '1px solid rgba(255,255,255,0.07)' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                            <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', background: 'rgba(123,47,190,0.2)', color: '#C4A8FF' }}>{plan.plan}</span>
-                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#93C5FD' }}>~{plan.estimatedCredits} cr</span>
-                          </div>
-                          <p style={{ fontSize: '13px', fontWeight: 700, color: 'white', margin: '0 0 4px' }}>{plan.title}</p>
-                          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', margin: '0 0 8px', lineHeight: 1.4 }}>{plan.description}</p>
-                          {plan.features.slice(0, 3).map(f => (
-                            <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '3px' }}>
-                              <Check size={10} color="#10B981" />
-                              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>{f.title}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    })}
-                  </div>
-                  {selectedPlan && (
-                    <div style={{ borderRadius: '14px', padding: '1.25rem', textAlign: 'center', background: 'rgba(123,47,190,0.08)', border: '1px solid rgba(123,47,190,0.2)' }}>
-                      <p style={{ fontSize: '15px', fontWeight: 700, color: 'white', margin: '0 0 4px' }}>Ready to build {selectedPlan.title}?</p>
-                      <p style={{ fontSize: '13px', color: 'rgba(196,168,255,0.7)', margin: '0 0 1rem' }}>~{selectedPlan.estimatedCredits} credits · Sign up free, get 30 to start</p>
-                      <Link href={'/register?plan=' + selectedPlan.plan + '&desc=' + encodeURIComponent(prompt)}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '14px', fontSize: '14px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G }}>
-                        Sign up free — start building <ArrowRight size={15} />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* CTA below generator */}
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
-            <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 26px', borderRadius: '14px', fontSize: '15px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G, boxShadow: '0 8px 32px rgba(123,47,190,0.35)' }}>
-              Start free — 30 credits <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          {/* Trust line */}
-          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.25)', marginTop: '0.5rem' }}>
-            No credit card required · 30 free credits on signup · Image, Website & Builder free to try
-          </p>
         </div>
       </section>
 
-      {/* ── MODEL MARQUEE ── */}
-      <section style={{ padding: '2.5rem 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <p style={{ textAlign: 'center', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-          Powered by the world's best AI models
-        </p>
-        <ModelMarquee />
-      </section>
-
-
+      {/* ── Generator result ── */}
+      {(isGenerating || hasResult) && (
+        <section ref={resultRef} style={{ padding: '0 1.5rem 4rem' }}>
+          <div style={{ maxWidth: '760px', margin: '0 auto', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(123,47,190,0.2)', background: 'rgba(255,255,255,0.02)' }}>
+            {isGenerating && (
+              <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
+                <div style={{ width: '50px', height: '50px', borderRadius: '16px', background: G, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Loader2 size={24} color="white" className="animate-spin" />
+                </div>
+                <p style={{ fontSize: '15px', fontWeight: 600, color: 'white', margin: 0 }}>
+                  {activeTool === 'image' ? 'Creating your image…' : activeTool === 'website' ? 'Building your website…' : 'Analyzing your project…'}
+                </p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.35)', margin: 0 }}>Usually 15–30 seconds</p>
+              </div>
+            )}
+            {imageUrl && !isGenerating && (
+              <div className="group" style={{ position: 'relative' }}>
+                <img src={imageUrl} alt={prompt} style={{ width: '100%', maxHeight: '500px', objectFit: 'contain', background: 'black', display: 'block' }} />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                  <Link href="/register" style={{ background: 'white', color: '#111', fontWeight: 700, padding: '12px 24px', borderRadius: '14px', fontSize: '14px', textDecoration: 'none' }}>
+                    Sign up to download full resolution →
+                  </Link>
+                </div>
+              </div>
+            )}
+            {websiteHtml && (
+              <div>
+                <iframe srcDoc={websiteHtml} style={{ width: '100%', height: '480px', border: 'none', display: 'block' }} sandbox="allow-scripts" title="Preview" />
+                <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Sign up to download without watermark</p>
+                  <Link href="/register" style={{ padding: '8px 18px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G }}>Get 30 free credits →</Link>
+                </div>
+              </div>
+            )}
+            {builderPlans.length > 0 && !isGenerating && (
+              <div style={{ padding: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '1rem' }}>
+                  {builderPlans.map(plan => {
+                    const isSel = selectedPlan?.plan === plan.plan
+                    return (
+                      <div key={plan.plan} onClick={() => setSelectedPlan(plan)} style={{ borderRadius: '14px', padding: '1rem', cursor: 'pointer', transition: 'all 0.2s', background: isSel ? 'rgba(123,47,190,0.12)' : 'rgba(255,255,255,0.03)', border: isSel ? '2px solid rgba(123,47,190,0.5)' : '1px solid rgba(255,255,255,0.07)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px', background: 'rgba(123,47,190,0.2)', color: '#C4A8FF' }}>{plan.plan}</span>
+                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#93C5FD' }}>~{plan.estimatedCredits} cr</span>
+                        </div>
+                        <p style={{ fontSize: '13px', fontWeight: 700, color: 'white', margin: '0 0 4px' }}>{plan.title}</p>
+                        <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', margin: '0 0 8px', lineHeight: 1.4 }}>{plan.description}</p>
+                        {plan.features.slice(0, 3).map(f => (
+                          <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '3px' }}>
+                            <Check size={10} color="#10B981" />
+                            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>{f.title}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  })}
+                </div>
+                {selectedPlan && (
+                  <div style={{ borderRadius: '14px', padding: '1.25rem', textAlign: 'center', background: 'rgba(123,47,190,0.08)', border: '1px solid rgba(123,47,190,0.2)' }}>
+                    <p style={{ fontSize: '15px', fontWeight: 700, color: 'white', margin: '0 0 4px' }}>Ready to build {selectedPlan.title}?</p>
+                    <p style={{ fontSize: '13px', color: 'rgba(196,168,255,0.7)', margin: '0 0 1rem' }}>~{selectedPlan.estimatedCredits} credits · Sign up free, get 30 to start</p>
+                    <Link href={`/register?plan=${selectedPlan.plan}&desc=${encodeURIComponent(prompt)}`}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '14px', fontSize: '14px', fontWeight: 700, textDecoration: 'none', color: 'white', background: G }}>
+                      Sign up free — start building <ArrowRight size={15} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── IMAGE GALLERY MARQUEE ── */}
       <section style={{ padding: '3rem 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>

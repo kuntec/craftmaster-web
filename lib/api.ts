@@ -132,5 +132,42 @@ export const chatApi = {
 
   deleteConversation: (id: string) =>
     api.delete(`/chat/conversations/${id}`),
-  
+
+}
+
+// ── Video Studio ───────────────────────────────────────────
+export const videoStudioApi = {
+  // Projects
+  listProjects: () =>
+    api.get('/video-studio/projects'),
+  createProject: (data: {
+    name: string; channelType: string; style: string
+    targetAudience: string; duration: string; idea: string
+  }) => api.post('/video-studio/projects', data),
+  getProject: (id: string) =>
+    api.get(`/video-studio/projects/${id}`),
+  deleteProject: (id: string) =>
+    api.delete(`/video-studio/projects/${id}`),
+
+  // Script
+  generateScript: (id: string) =>
+    api.post(`/video-studio/projects/${id}/script`),
+  saveScript: (id: string, script: string) =>
+    api.put(`/video-studio/projects/${id}/script`, { script }),
+
+  // Scenes
+  generateScenes: (id: string) =>
+    api.post(`/video-studio/projects/${id}/scenes`),
+  updateScene: (id: string, sceneId: string, data: any) =>
+    api.put(`/video-studio/projects/${id}/scenes/${sceneId}`, data),
+
+  // Asset generation
+  generateImage: (id: string, sceneId: string) =>
+    api.post(`/video-studio/projects/${id}/scenes/${sceneId}/image`),
+  generateVideo: (id: string, sceneId: string, data?: { duration?: number; resolution?: string; enableAudio?: boolean }) =>
+    api.post(`/video-studio/projects/${id}/scenes/${sceneId}/video`, data || {}),
+
+  // Complete callback
+  completeAsset: (id: string, sceneId: string, type: 'image' | 'video', url: string) =>
+    api.post(`/video-studio/projects/${id}/scenes/${sceneId}/complete`, { type, url }),
 }
